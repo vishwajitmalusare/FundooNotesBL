@@ -3,9 +3,14 @@ package com.bridgelabz.fundooApp.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Document
 public class Label {
 
 	@Id
@@ -14,7 +19,10 @@ public class Label {
 	private LocalDateTime creationTime;
 	private LocalDateTime updateTime;
 	private String userId;
-
+	
+	@JsonIgnore
+	@DBRef(lazy = true)
+	private List<Note> noteList;
 
 	public Label() {
 	}
@@ -26,17 +34,27 @@ public class Label {
 	 * @param updateTime
 	 * @param userId
 	 */
-	public Label(String labelId, String labelName, LocalDateTime creationTime, LocalDateTime updateTime, String userId) {
-		
+	
+	public Label(String labelId, String labelName, LocalDateTime creationTime, LocalDateTime updateTime, String userId,
+			List<Note> noteList) {
 		this.labelId = labelId;
 		this.labelName = labelName;
 		this.creationTime = creationTime;
 		this.updateTime = updateTime;
 		this.userId = userId;
+		this.noteList = noteList;
 	}
 
 	public String getLabelId() {
 		return labelId;
+	}
+
+	public List<Note> getNoteList() {
+		return noteList;
+	}
+
+	public void setNoteList(List<Note> noteList) {
+		this.noteList = noteList;
 	}
 
 	public String getLabelName() {
@@ -79,7 +97,7 @@ public class Label {
 	@Override
 	public String toString() {
 		return "Label [labelId=" + labelId + ", labelName=" + labelName + ", creationTime=" + creationTime
-				+ ", updateTime=" + updateTime + ", userId=" + userId + "]";
+				+ ", updateTime=" + updateTime + ", userId=" + userId + ", noteList=" + noteList + "]";
 	}
 
 

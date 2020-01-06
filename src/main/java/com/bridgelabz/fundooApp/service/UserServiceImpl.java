@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 				user.setUpdateTime(LocalDateTime.now());
 				User savedUser = userRepository.save(user);
 				String token = tokenGenerator.generateToken(savedUser.getUserid());
+				//put token into redis
 				String activationUrl = getLink(requestUrl, "/verification/", token);
 				Email email = new Email();
 				email.setTo("iamvish.net@gmail.com");

@@ -146,7 +146,7 @@ public class NoteServiceImpl implements NoteService {
 		 * 
 		 * } return noteslist;
 		 */
-		return filteredNotes;
+		 return filteredNotes;
 	}
 
 	@Override
@@ -266,7 +266,7 @@ public class NoteServiceImpl implements NoteService {
 		List<Note> updateList = new ArrayList<Note>();
 		if (optUser.isPresent()) {
 			List<Note> noteList = noteRepository.findByUserId(userId);
-			//List<Note> noteList = noteRepository.findAll();
+			// List<Note> noteList = noteRepository.findAll();
 			for (int i = 0; i < noteList.size(); i++) {
 				for (int j = 0; j < noteList.size() - 1; j++) {
 					if (noteList.get(i).getTitle().compareTo(noteList.get(j).getTitle()) < 0) {
@@ -290,7 +290,7 @@ public class NoteServiceImpl implements NoteService {
 		Optional<User> optUser = userRepository.findById(userId);
 		if (optUser.isPresent()) {
 			List<Note> noteList = noteRepository.findByUserId(userId);
-			//List<Note> noteList = noteRepository.findAll();
+			// List<Note> noteList = noteRepository.findAll();
 			for (int i = 0; i < noteList.size(); i++) {
 				for (int j = 0; j < noteList.size(); j++) {
 					if (noteList.get(i).getCreationtTime().compareTo(noteList.get(j).getCreationtTime()) < 0) {

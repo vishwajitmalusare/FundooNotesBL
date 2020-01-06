@@ -5,7 +5,11 @@ import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Document
 public class Note {
 
 	@Id
@@ -19,7 +23,7 @@ public class Note {
 	private boolean isArchive;
 	private boolean isPin;
 
-	@DBRef
+	@DBRef(lazy = true)
 	private List<Label> labels;
 
 	public Note() {

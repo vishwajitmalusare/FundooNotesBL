@@ -108,7 +108,7 @@ public class LabelServiceImpl implements LabelService {
 
 	@Override
 	public List<Label> getAllLabel(String token) {
-		
+
 		String userId = tokenGenerator.verifyToken(token);
 		List<Label> labels = labelRespository.findByUserId(userId);
 //		List<Label> filteredLabels = labels.stream().filter(label -> {
@@ -117,7 +117,6 @@ public class LabelServiceImpl implements LabelService {
 //		return filteredLabels;
 		return labels;
 	}
-	
 
 	@Override
 	public String addLabelToNote(String token, String labelId, String noteId) {
@@ -129,20 +128,23 @@ public class LabelServiceImpl implements LabelService {
 			if (optNote.isPresent()) {
 				Note note = optNote.get();
 				List<Label> labelList = new ArrayList<Label>();
+				List<Note> noteList = new ArrayList<Note>();
 				Label label = optLabel.get();
-				
-				if(note.getLabels()!=null)
-				{
-				labelList=note.getLabels();
-				labelList.add(label);				
-				}
-				else
-				{
+				if (note.getLabels() != null && label.getNoteList() != null) {
+					labelList = note.getLabels();
 					labelList.add(label);
+					noteList = label.getNoteList();
+					noteList.add(note);
+				} else {
+					labelList.add(label);
+					noteList.add(note);
 				}
 				note.setLabels(labelList);
 				note.setUpdateTime(LocalDateTime.now());
 				noteRepository.save(note);
+				label.setNoteList(noteList);
+				label.setUpdateTime(LocalDateTime.now());
+				labelRespository.save(label);
 				return "label added to note";
 
 			} else {
@@ -165,25 +167,24 @@ public class LabelServiceImpl implements LabelService {
 				Note note = optNote.get();
 				Label label = optLabel.get();
 				System.out.println(label);
-				List<Label> labelList =new ArrayList<Label>();
-				if(note.getLabels()!=null)
-				{
-				labelList=note.getLabels();
-				System.out.println(labelList);
-				for (Label label1 : labelList) {
-					if (label1.getLabelId().equals(label.getLabelId())) {
-						labelList.remove(label1);
-						note.setUpdateTime(LocalDateTime.now());
-						note.setLabels(labelList);
-						noteRepository.save(note);
+				List<Label> labelList = new ArrayList<Label>();
+				if (note.getLabels() != null) {
+					labelList = note.getLabels();
+					System.out.println(labelList);
+					for (Label label1 : labelList) {
+						if (label1.getLabelId().equals(label.getLabelId())) {
+							labelList.remove(label1);
+							note.setUpdateTime(LocalDateTime.now());
+							note.setLabels(labelList);
+							noteRepository.save(note);
 
-						return "label removed from note";
+							return "label removed from note";
 
+						}
 					}
 				}
-				}
 				return "";
-				
+
 			} else {
 				throw new NoteException("note note present");
 			}
