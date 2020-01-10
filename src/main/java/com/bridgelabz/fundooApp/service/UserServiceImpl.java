@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService {
 				email.setTo("iamvish.net@gmail.com");
 				email.setSubject("resetPassword");
 				email.setBody("reset your password \n" + resetUrl);
-				mailsender.send(email);
+				rabbitMQMailSender.sendMessageToQueue(email);
 				return "Mail sent";
 
 			} catch (Exception e) {
