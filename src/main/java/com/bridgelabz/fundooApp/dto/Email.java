@@ -1,7 +1,11 @@
 package com.bridgelabz.fundooApp.dto;
 
-public class Email {
+import java.io.Serializable;
 
+@SuppressWarnings("serial")
+public class Email implements Serializable {
+
+	
 	private String emailId;
 	private String to;
 	private String subject;
@@ -50,5 +54,11 @@ public class Email {
 	public void setBody(String body) {
 		this.body = body;
 	}
+	
+	@Override
+	public String toString() {
+		return "Email [emailId=" + emailId + ", to=" + to + ", subject=" + subject + ", body=" + body + "]";
+	}
+
 
 }

@@ -17,6 +17,7 @@ import com.bridgelabz.fundooApp.repository.UserRepository;
 import com.bridgelabz.fundooApp.utility.EncryptUtil;
 import com.bridgelabz.fundooApp.utility.ITokenGenerator;
 import com.bridgelabz.fundooApp.utility.MailUtil;
+import com.bridgelabz.fundooApp.utility.RabbitMQSender;
 
 /**
  * @author admin123
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder encoder;
 
 	@Autowired
-	MailUtil mailsender;
+	RabbitMQSender rabbitMQMailSender;
 
 	@Autowired
 	private ITokenGenerator tokenGenerator;
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
 				email.setTo("iamvish.net@gmail.com");
 				email.setSubject("Account verification");
 				email.setBody("Please verify your email id by using below link \n" + activationUrl);
-				mailsender.send(email);
+				rabbitMQMailSender.sendMessageToQueue(email);
 				return "Verification mail send successfully";
 			} catch (Exception e) {
 				e.printStackTrace();
