@@ -194,37 +194,26 @@ public class UserServiceImpl implements UserService {
 		}
 		return "Profile picture uploaded...";
 	}
-	/*try {
-			Files.copy(file.getInputStream(), fileBasePath.resolve(uniqueId), StandardCopyOption.REPLACE_EXISTING);
-			user.get().setProfilePic(uniqueId);
-			userRepository.save(user.get());
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		return "Profile picture is uploaded";
-	}
-
-	public String getUploadedPic(String token) {
+	
+	public String getProfilePicture(String token) {
 		String id = tokenGenerator.verifyToken(token);
-
 		Optional<User> user = userRepository.findByUserId(id);
-
-		if (user.isPresent()) {
+		
+		if(user.isPresent()) {
 			try {
-				Path imageFile = fileBasePath.resolve(user.get().getProfilePic());
-
+				Path imageFile = fileBasePath.resolve(user.get().getProfilePicture());
+				
 				Resource resource = new UrlResource(imageFile.toUri());
-
-				if (resource.exists() || (resource.isReadable())) {
-					String resourcePath = resource.toString();
-					return resourcePath;
+				
+				if(resource.exists() || resource.isReadable()) {
+					String resoucePath = resource.toString();
+					return resoucePath;
 				}
-			} catch (Exception e) {
+			}catch (Exception e) {
 				// TODO: handle exception
-				e.printStackTrace();
+				e.getMessage();
 			}
 		}
-		throw new UserException("user already exist");
-	}*/
+		throw new UserException("user not exist");
+	}
 }

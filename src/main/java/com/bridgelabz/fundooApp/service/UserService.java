@@ -18,6 +18,8 @@ public interface UserService {
 
 	String validateUser(String token);
 	
-	public String uploadProfilePicture(String token, MultipartFile file);
+	String uploadProfilePicture(String token, MultipartFile file);
+	
+	public String getProfilePicture(String token);
 
 }

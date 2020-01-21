@@ -74,24 +74,19 @@ public class UserController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-	@PostMapping("/uploadprofilepicture") 
-	public ResponseEntity<Response> uploadProfilePicture(@RequestHeader String token, @RequestParam MultipartFile file){
+	@PostMapping("/uploadprofilepicture")
+	public ResponseEntity<Response> uploadProfilePicture(@RequestHeader String token,
+			@RequestParam MultipartFile file) {
 		String message = userService.uploadProfilePicture(token, file);
 		Response response = new Response(HttpStatus.OK.value(), message, null);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	/*@PostMapping("/uploadprofilepic")
-	public ResponseEntity<Response> uploadProfile(@RequestHeader String token, @RequestParam MultipartFile file)throws IOException {
-		String message = userService.uploadProfile(token, file);
-		Response response = new Response(HttpStatus.OK.value(), message,null);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+
+	@GetMapping("/getprofilepicture/{token}")
+	public ResponseEntity<Response> getProfilePicture(@PathVariable String token) {
+		String resourceStatus = userService.getProfilePicture(token);
+		String message = "Got a profile picture....";
+		Response response = new Response(HttpStatus.OK.value(), message, resourceStatus);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
-	@GetMapping("/getprofilepic/{token}")
-	public ResponseEntity<Response> getProfilePic(@PathVariable String token) {
-		String resourseStatus = userService.getUploadedPic(token);
-		String message = "Profile pic uploaded......";
-		Response response = new Response(HttpStatus.OK.value(), message, resourseStatus);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
-	}*/
 }
