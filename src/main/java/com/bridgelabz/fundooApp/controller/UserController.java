@@ -1,5 +1,6 @@
 package com.bridgelabz.fundooApp.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundooApp.dto.LoginDto;
 import com.bridgelabz.fundooApp.dto.UserDto;
@@ -71,4 +74,24 @@ public class UserController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
+	@PostMapping("/uploadprofilepicture") 
+	public ResponseEntity<Response> uploadProfilePicture(@RequestHeader String token, @RequestParam MultipartFile file){
+		String message = userService.uploadProfilePicture(token, file);
+		Response response = new Response(HttpStatus.OK.value(), message, null);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	/*@PostMapping("/uploadprofilepic")
+	public ResponseEntity<Response> uploadProfile(@RequestHeader String token, @RequestParam MultipartFile file)throws IOException {
+		String message = userService.uploadProfile(token, file);
+		Response response = new Response(HttpStatus.OK.value(), message,null);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	
+	@GetMapping("/getprofilepic/{token}")
+	public ResponseEntity<Response> getProfilePic(@PathVariable String token) {
+		String resourseStatus = userService.getUploadedPic(token);
+		String message = "Profile pic uploaded......";
+		Response response = new Response(HttpStatus.OK.value(), message, resourseStatus);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}*/
 }

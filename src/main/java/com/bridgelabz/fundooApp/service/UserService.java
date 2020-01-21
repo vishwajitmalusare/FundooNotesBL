@@ -1,6 +1,8 @@
 
 package com.bridgelabz.fundooApp.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.bridgelabz.fundooApp.dto.LoginDto;
 import com.bridgelabz.fundooApp.dto.UserDto;
 
@@ -14,6 +16,8 @@ public interface UserService {
 
 	String restSetPassword(String token, String password);
 
-	// String validateUser(String token);
 	String validateUser(String token);
+	
+	public String uploadProfilePicture(String token, MultipartFile file);
+
 }

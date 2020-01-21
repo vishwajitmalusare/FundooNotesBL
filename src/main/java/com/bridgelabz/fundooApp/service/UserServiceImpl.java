@@ -1,12 +1,21 @@
 package com.bridgelabz.fundooApp.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundooApp.dto.*;
 import com.bridgelabz.fundooApp.dto.LoginDto;
@@ -43,6 +52,8 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private ITokenGenerator tokenGenerator;
+	
+	private final Path fileBasePath = Paths.get("/home/admin1/Downloads/Vish/bdzl/ProfilePics/");
 
 	@Override
 	public String registrationUser(UserDto userDto, StringBuffer requestUrl) {
@@ -167,4 +178,53 @@ public class UserServiceImpl implements UserService {
 		return url;
 	}
 
+	public String uploadProfilePicture(String token, MultipartFile file) {
+		String userId = tokenGenerator.verifyToken(token);
+		Optional<User> user = userRepository.findByUserId(userId);
+		
+		UUID uuid = UUID.randomUUID();
+		String uniqueId = uuid.toString();
+		try {
+		Files.copy(file.getInputStream(), fileBasePath.resolve(uniqueId),StandardCopyOption.REPLACE_EXISTING);
+		user.get().setProfilePicture(uniqueId);
+		userRepository.save(user.get());
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.getMessage();
+		}
+		return "Profile picture uploaded...";
+	}
+	/*try {
+			Files.copy(file.getInputStream(), fileBasePath.resolve(uniqueId), StandardCopyOption.REPLACE_EXISTING);
+			user.get().setProfilePic(uniqueId);
+			userRepository.save(user.get());
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return "Profile picture is uploaded";
+	}
+
+	public String getUploadedPic(String token) {
+		String id = tokenGenerator.verifyToken(token);
+
+		Optional<User> user = userRepository.findByUserId(id);
+
+		if (user.isPresent()) {
+			try {
+				Path imageFile = fileBasePath.resolve(user.get().getProfilePic());
+
+				Resource resource = new UrlResource(imageFile.toUri());
+
+				if (resource.exists() || (resource.isReadable())) {
+					String resourcePath = resource.toString();
+					return resourcePath;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		throw new UserException("user already exist");
+	}*/
 }

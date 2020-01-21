@@ -25,6 +25,7 @@ public class User {
 	private boolean isVerified;
 	private LocalDateTime creationTime;
 	private LocalDateTime updateTime;
+	private String profilePicture;
 
 	public User() {
 
@@ -41,10 +42,18 @@ public class User {
 	 * @param creationTime
 	 * @param updateTime
 	 */
-	public User(String userId, @Email(message = "Email should not be null") String email, String firstName,String lastName, String password,
-			String phoneNumber, String address, boolean isVerified, LocalDateTime creationTime,
-			LocalDateTime updateTime) {
+	
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
 
+	public User(String userId, @Email(message = "Email should not be null") String email, String firstName,
+			String lastName, String password, String phoneNumber, String address, boolean isVerified,
+			LocalDateTime creationTime, LocalDateTime updateTime, String profilePicture) {
+		super();
 		this.userId = userId;
 		this.email = email;
 		this.firstName = firstName;
@@ -55,13 +64,7 @@ public class User {
 		this.isVerified = isVerified;
 		this.creationTime = creationTime;
 		this.updateTime = updateTime;
-	}
-
-	/**
-	 * @return the address
-	 */
-	public String getAddress() {
-		return address;
+		this.profilePicture = profilePicture;
 	}
 
 	/**
@@ -164,12 +167,24 @@ public class User {
 	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+
+	public String getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture = profilePicture;
+	}
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", email=" + email + ", name=" + firstName + ", password=" + password
-				+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified=" + isVerified
-				+ ", creationTime=" + creationTime + ", updateTime=" + updateTime + "]";
+		return "User [userId=" + userId + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", password=" + password + ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified="
+				+ isVerified + ", creationTime=" + creationTime + ", updateTime=" + updateTime + ", profilePicture="
+				+ profilePicture + "]";
 	}
+
+
 
 }
