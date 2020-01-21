@@ -24,4 +24,11 @@ public class PDFController {
 		Response response = new Response(HttpStatus.OK.value(), message,null);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
+	
+	@PostMapping("/notetopdf")
+	public ResponseEntity<Response> extractNoteToPDF(@RequestParam String token, @RequestParam String fileName) {
+		String message = pdfService.extractNoteToPDF(token, fileName);
+		Response response = new Response(HttpStatus.OK.value(), message, null);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
 }
