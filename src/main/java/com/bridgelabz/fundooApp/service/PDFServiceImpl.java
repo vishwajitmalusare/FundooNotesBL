@@ -80,7 +80,6 @@ public class PDFServiceImpl implements PDFService {
 			User user = optUser.get();
 			String imgPath = user.getProfilePicture();
 			System.out.println(imgPath);
-
 			PDDocument document = new PDDocument();
 			PDPage page = new PDPage();
 			document.addPage(page);
