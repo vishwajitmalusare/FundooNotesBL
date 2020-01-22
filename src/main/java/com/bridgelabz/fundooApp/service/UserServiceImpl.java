@@ -15,7 +15,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bridgelabz.fundooApp.dto.*;
 import com.bridgelabz.fundooApp.dto.LoginDto;
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ITokenGenerator tokenGenerator;
 	
-	private final Path fileBasePath = Paths.get("/home/admin1/Downloads/Vish/bdzl/ProfilePics/");
+	private final String fileBasePath = "/home/admin1/Downloads/Vish/bdzl/ProfilePics/";
 
 	@Override
 	public String registrationUser(UserDto userDto, StringBuffer requestUrl) {
@@ -179,15 +181,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public String uploadProfilePicture(String token, MultipartFile file) {
+		try {
 		String userId = tokenGenerator.verifyToken(token);
 		Optional<User> user = userRepository.findByUserId(userId);
-		
-		UUID uuid = UUID.randomUUID();
-		String uniqueId = uuid.toString();
-		try {
-		Files.copy(file.getInputStream(), fileBasePath.resolve(uniqueId),StandardCopyOption.REPLACE_EXISTING);
-		user.get().setProfilePicture(uniqueId);
+		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+		Path path = Paths.get(fileBasePath, fileName);
+		String imgPath = path.toString();
+		if(!user.isPresent()) {
+			throw new UserException("user not exist");
+		}
+		Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		user.get().setProfilePicture(imgPath);
 		userRepository.save(user.get());
+		
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/home/admin1/Aimage")
+				.path(fileName)
+				.toUriString();
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.getMessage();
@@ -195,15 +205,15 @@ public class UserServiceImpl implements UserService {
 		return "Profile picture uploaded...";
 	}
 	
-	public String getProfilePicture(String token) {
+	public String getProfilePicture(String token, String fileName) {
 		String id = tokenGenerator.verifyToken(token);
 		Optional<User> user = userRepository.findByUserId(id);
 		
 		if(user.isPresent()) {
 			try {
-				Path imageFile = fileBasePath.resolve(user.get().getProfilePicture());
+				Path path = Paths.get(fileBasePath + fileName);
 				
-				Resource resource = new UrlResource(imageFile.toUri());
+				Resource resource = new UrlResource(path.toUri());
 				
 				if(resource.exists() || resource.isReadable()) {
 					String resoucePath = resource.toString();
@@ -216,4 +226,5 @@ public class UserServiceImpl implements UserService {
 		}
 		throw new UserException("user not exist");
 	}
+	
 }

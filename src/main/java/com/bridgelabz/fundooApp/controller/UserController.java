@@ -82,11 +82,12 @@ public class UserController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/getprofilepicture/{token}")
-	public ResponseEntity<Response> getProfilePicture(@PathVariable String token) {
-		String resourceStatus = userService.getProfilePicture(token);
+	@GetMapping("/getprofilepicture/{fileName:.+}")
+	public ResponseEntity<Response> getProfilePicture(@RequestHeader String token, @PathVariable String fileName) {
+		String resourceStatus = userService.getProfilePicture(token,fileName);
 		String message = "Got a profile picture....";
 		Response response = new Response(HttpStatus.OK.value(), message, resourceStatus);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
+	
 }

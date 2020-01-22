@@ -13,6 +13,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,11 +74,22 @@ public class PDFServiceImpl implements PDFService {
 	public String extractNoteToPDF(String token, String fileName) {
 		// TODO Auto-generated method stub
 		try {
+			String userId = tokenGenerator.verifyToken(token);
+			Optional<User> optUser = userRepository.findByUserId(userId);
+
+			User user = optUser.get();
+			String imgPath = user.getProfilePicture();
+			System.out.println(imgPath);
+
 			PDDocument document = new PDDocument();
 			PDPage page = new PDPage();
 			document.addPage(page);
 			String line;
+
+			PDImageXObject profilePic = PDImageXObject.createFromFile(imgPath, document);
 			cs = new PDPageContentStream(document, page);
+			cs.drawImage(profilePic, 300, 650);
+
 			cs.beginText();
 			cs.setFont(PDType1Font.TIMES_ROMAN, 12);
 			cs.newLineAtOffset(20, 750);
@@ -111,46 +123,45 @@ public class PDFServiceImpl implements PDFService {
 			double allowedHeight, PDPage page, PDFont font, int fontSize) {
 		// TODO Auto-generated method stub
 		try {
-		List<String> lines = new ArrayList<String>();
-		String line ="";
-		
-		String[] words = text.split(" ");
-		for(String word: words) {
-			if(!line.isEmpty()) {
-				line += " ";
+			List<String> lines = new ArrayList<String>();
+			String line = "";
+
+			String[] words = text.split(" ");
+			for (String word : words) {
+				if (!line.isEmpty()) {
+					line += " ";
+				}
+				int size = (int) (fontSize * font.getStringWidth(line + word) / 1000);
+				if (size > allowedWidth) {
+					lines.add(line);
+					line = word;
+				} else {
+					line += word;
+				}
 			}
-			int size = (int) (fontSize * font.getStringWidth(line + word) / 1000);
-			if(size > allowedWidth) {
-				lines.add(line);
-				line = word;
+			lines.add(line);
+			for (String ln : lines) {
+				currentHeight = currentHeight + 1.2 * fontSize;
+
+				if (currentHeight >= allowedHeight) {
+					page = new PDPage();
+					document.addPage(page);
+					currentHeight = 0;
+					cs.endText();
+					cs.close();
+					cs = new PDPageContentStream(document, page);
+					cs.beginText();
+					cs.setFont(PDType1Font.TIMES_ROMAN, 20);
+					cs.newLineAtOffset(20, 750);
+					cs.setLeading(12 + 20);
+				}
+				cs.showText(ln);
+				cs.newLine();
 			}
-			else {
-				line += word;
-			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.getMessage();
 		}
-		lines.add(line);
-		for(String ln : lines) {
-			currentHeight = currentHeight + 1.2 * fontSize;
-			
-			if(currentHeight >= allowedHeight) {
-				page = new PDPage();
-				document.addPage(page);
-				currentHeight=0;
-				cs.endText();
-				cs.close();
-				cs = new PDPageContentStream(document, page);
-				cs.beginText();
-				cs.setFont(PDType1Font.TIMES_ROMAN, 20);
-				cs.newLineAtOffset(20, 750);
-				cs.setLeading(12 + 20);
-			}
-			cs.showText(ln);
-			cs.newLine();
-		}
-	}catch (Exception e) {
-		// TODO: handle exception
-		e.getMessage();
-	}
 	}
 
 }

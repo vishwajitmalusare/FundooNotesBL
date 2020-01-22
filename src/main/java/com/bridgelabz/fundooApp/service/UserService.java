@@ -20,6 +20,6 @@ public interface UserService {
 	
 	String uploadProfilePicture(String token, MultipartFile file);
 	
-	public String getProfilePicture(String token);
+	String getProfilePicture(String token, String fileName);
 
 }
