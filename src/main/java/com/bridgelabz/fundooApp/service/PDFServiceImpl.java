@@ -87,7 +87,7 @@ public class PDFServiceImpl implements PDFService {
 
 			PDImageXObject profilePic = PDImageXObject.createFromFile(imgPath, document);
 			cs = new PDPageContentStream(document, page);
-			cs.drawImage(profilePic, 300, 650);
+			cs.drawImage(profilePic, 520, 670,100,100);
 
 			cs.beginText();
 			cs.setFont(PDType1Font.TIMES_ROMAN, 12);
