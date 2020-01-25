@@ -1,6 +1,5 @@
 package com.bridgelabz.fundooApp.controller;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +59,8 @@ public class UserController {
 	}
 
 	@PutMapping("/resetpassword")
-	public ResponseEntity<Response> resetPassword(@RequestParam String token, @RequestBody String password) {
-		String message = userService.restSetPassword(token, password);
+	public ResponseEntity<Response> resetPassword(@RequestParam String emailId, @RequestBody String password) {
+		String message = userService.restSetPassword(emailId, password);
 		Response response = new Response(HttpStatus.OK.value(), message, null);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 
@@ -84,10 +83,10 @@ public class UserController {
 
 	@GetMapping("/getprofilepicture/{fileName:.+}")
 	public ResponseEntity<Response> getProfilePicture(@RequestHeader String token, @PathVariable String fileName) {
-		String resourceStatus = userService.getProfilePicture(token,fileName);
+		String resourceStatus = userService.getProfilePicture(token, fileName);
 		String message = "Got a profile picture....";
 		Response response = new Response(HttpStatus.OK.value(), message, resourceStatus);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
 }

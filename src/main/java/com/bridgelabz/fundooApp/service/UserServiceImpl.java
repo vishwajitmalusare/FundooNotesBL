@@ -1,18 +1,17 @@
 package com.bridgelabz.fundooApp.service;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -27,7 +26,6 @@ import com.bridgelabz.fundooApp.model.User;
 import com.bridgelabz.fundooApp.repository.UserRepository;
 import com.bridgelabz.fundooApp.utility.EncryptUtil;
 import com.bridgelabz.fundooApp.utility.ITokenGenerator;
-import com.bridgelabz.fundooApp.utility.MailUtil;
 import com.bridgelabz.fundooApp.utility.RabbitMQSender;
 
 /**
@@ -55,8 +53,12 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private ITokenGenerator tokenGenerator;
 	
+	@Autowired
+	RedisTemplate<String, Object> redisTemplate;
+
 	private final String fileBasePath = "/home/admin1/Downloads/Vish/bdzl/ProfilePics/";
 
+	private final static String Key = "userOne";
 	@Override
 	public String registrationUser(UserDto userDto, StringBuffer requestUrl) {
 
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
 				user.setUpdateTime(LocalDateTime.now());
 				User savedUser = userRepository.save(user);
 				String token = tokenGenerator.generateToken(savedUser.getUserid());
-				//put token into redis
+				// put token into redis
 				String activationUrl = getLink(requestUrl, "/verification/", token);
 				Email email = new Email();
 				email.setTo("iamvish.net@gmail.com");
@@ -97,7 +99,10 @@ public class UserServiceImpl implements UserService {
 
 				if (EncryptUtil.isPassword(loginDto, user)) {
 					if (user.isVerified()) {
-						return tokenGenerator.generateToken(user.getUserid());
+						String token = tokenGenerator.generateToken(user.getUserid());
+						String emailId = user.getEmail();
+						redisTemplate.opsForHash().put(Key, emailId, token);
+						return token;
 					} else {
 						throw new UserException("please verify your email");
 					}
@@ -142,7 +147,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String restSetPassword(String token, String password) {
+	public String restSetPassword(String emailId, String password) {
+		String token = (String) redisTemplate.opsForHash().get(Key, emailId);
 		String userid = tokenGenerator.verifyToken(token);
 		Optional<User> optUser = userRepository.findByUserId(userid);
 		if (optUser.isPresent()) {
@@ -182,49 +188,47 @@ public class UserServiceImpl implements UserService {
 
 	public String uploadProfilePicture(String token, MultipartFile file) {
 		try {
-		String userId = tokenGenerator.verifyToken(token);
-		Optional<User> user = userRepository.findByUserId(userId);
-		String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-		Path path = Paths.get(fileBasePath, fileName);
-		String imgPath = path.toString();
-		if(!user.isPresent()) {
-			throw new UserException("user not exist");
-		}
-		Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-		user.get().setProfilePicture(imgPath);
-		userRepository.save(user.get());
-		
-		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-				.path("/home/admin1/Aimage")
-				.path(fileName)
-				.toUriString();
-		}catch (Exception e) {
+			String userId = tokenGenerator.verifyToken(token);
+			Optional<User> user = userRepository.findByUserId(userId);
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+			Path path = Paths.get(fileBasePath, fileName);
+			String imgPath = path.toString();
+			if (!user.isPresent()) {
+				throw new UserException("user not exist");
+			}
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+			user.get().setProfilePicture(imgPath);
+			userRepository.save(user.get());
+
+			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/home/admin1/Aimage")
+					.path(fileName).toUriString();
+		} catch (Exception e) {
 			// TODO: handle exception
 			e.getMessage();
 		}
 		return "Profile picture uploaded...";
 	}
-	
+
 	public String getProfilePicture(String token, String fileName) {
 		String id = tokenGenerator.verifyToken(token);
 		Optional<User> user = userRepository.findByUserId(id);
-		
-		if(user.isPresent()) {
+
+		if (user.isPresent()) {
 			try {
 				Path path = Paths.get(fileBasePath + fileName);
-				
+
 				Resource resource = new UrlResource(path.toUri());
-				
-				if(resource.exists() || resource.isReadable()) {
+
+				if (resource.exists() || resource.isReadable()) {
 					String resoucePath = resource.toString();
 					return resoucePath;
 				}
-			}catch (Exception e) {
+			} catch (Exception e) {
 				// TODO: handle exception
 				e.getMessage();
 			}
 		}
 		throw new UserException("user not exist");
 	}
-	
+
 }

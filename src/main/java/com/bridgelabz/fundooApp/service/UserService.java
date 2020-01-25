@@ -14,7 +14,7 @@ public interface UserService {
 
 	String forgetPassword(String emailId, StringBuffer requestUrl);
 
-	String restSetPassword(String token, String password);
+	String restSetPassword(String emailId, String password);
 
 	String validateUser(String token);
 	
