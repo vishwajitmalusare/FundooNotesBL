@@ -53,7 +53,7 @@ public class PDFServiceImpl implements PDFService {
 
 			if (optUser.isPresent()) {
 				User user = optUser.get();
-				String userName = user.getFirstName();
+				String userName = user.getName();
 				pdfAttribute.setAuthor(userName);
 			} else {
 				throw new UserException("user dose not exist");

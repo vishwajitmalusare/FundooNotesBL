@@ -14,11 +14,7 @@ public class UserDto {
 
 	@NotNull
 	@Size(min = 2 , max = 20)
-	private String firstName;
-	
-	@NotNull
-	@Size(min=2 , max = 20)
-	private String lastName;
+	private String name;
 
 	private String email;
 
@@ -37,31 +33,22 @@ public class UserDto {
 	 * @param phoneNumber
 	 * @param password
 	 */
-	public UserDto(@NotNull @Size(min = 2, max = 20) String firstName,@NotNull @Size(min = 2, max = 20) String lastName, String email,
+	public UserDto(@NotNull @Size(min = 2, max = 20) String name, String email,
 			@Pattern(regexp = "^[6-9]?[0-9]{9}+$") String phoneNumber, @NotNull String password) {
 		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
 	}
 
 
-	public String getFirstName() {
-		return firstName;
+	public String getName() {
+		return name;
 	}
 
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String firstName) {
+		this.name = firstName;
 	}
 
 	public String getEmail() {
@@ -90,7 +77,7 @@ public class UserDto {
 
 	@Override
 	public String toString() {
-		return "UserDto [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phoneNumber="
+		return "UserDto [name=" + name + ", email=" + email + ", phoneNumber="
 				+ phoneNumber + ", password=" + password + "]";
 	}
 

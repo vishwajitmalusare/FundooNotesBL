@@ -17,8 +17,7 @@ public class User {
 	@Email(message = "Email should not be null")
 	private String email;
 
-	private String firstName;
-	private String lastName;
+	private String name;
 	private String password;
 	private String phoneNumber;
 	private String address;
@@ -50,14 +49,12 @@ public class User {
 		return address;
 	}
 
-	public User(String userId, @Email(message = "Email should not be null") String email, String firstName,
-			String lastName, String password, String phoneNumber, String address, boolean isVerified,
+	public User(String userId, @Email(message = "Email should not be null") String email, String name, String password, String phoneNumber, String address, boolean isVerified,
 			LocalDateTime creationTime, LocalDateTime updateTime, String profilePicture) {
 		super();
 		this.userId = userId;
 		this.email = email;
-		this.firstName = firstName;
-		this.lastName = lastName;
+		this.name = name;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
 		this.address = address;
@@ -103,20 +100,12 @@ public class User {
 	}
 
 	
-	public String getFirstName() {
-		return firstName;
+	public String getName() {
+		return name;
 	}
 
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getEmail() {
@@ -179,8 +168,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", email=" + email + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", password=" + password + ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified="
+		return "User [userId=" + userId + ", email=" + email + ", name=" + name +", password=" + password + ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified="
 				+ isVerified + ", creationTime=" + creationTime + ", updateTime=" + updateTime + ", profilePicture="
 				+ profilePicture + "]";
 	}
