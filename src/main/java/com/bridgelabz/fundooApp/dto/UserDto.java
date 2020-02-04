@@ -14,13 +14,18 @@ public class UserDto {
 
 	@NotNull
 	@Size(min = 2 , max = 20)
+	@ApiModelProperty(position = 1, required = true)
 	private String name;
 
+	@ApiModelProperty(position = 2, required = true)
 	private String email;
 
 	@Pattern(regexp = "^[6-9]?[0-9]{9}+$")
+	@ApiModelProperty(position = 4, required = true)
 	private String phoneNumber;
+	
 	@NotNull
+	@ApiModelProperty(position = 3, required = true)
 	private String password;
 
 	public UserDto() {
@@ -58,9 +63,6 @@ public class UserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-//	public void setEmail(String email) {
-//		this.email = email;
-//	}
 
 	public String getPhoneNumber() {
 		return phoneNumber;

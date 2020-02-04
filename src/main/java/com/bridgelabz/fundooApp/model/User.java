@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.Email;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -16,7 +15,6 @@ public class User {
 	// @Indexed(unique=true)
 	@Email(message = "Email should not be null")
 	private String email;
-
 	private String name;
 	private String password;
 	private String phoneNumber;

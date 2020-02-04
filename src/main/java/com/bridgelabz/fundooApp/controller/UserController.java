@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,7 @@ import com.bridgelabz.fundooApp.dto.UserDto;
 import com.bridgelabz.fundooApp.response.Response;
 import com.bridgelabz.fundooApp.service.UserService;
 
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @RestController
 @RequestMapping("/userservice")
 public class UserController {
@@ -45,7 +47,7 @@ public class UserController {
 			throws IllegalArgumentException, UnsupportedEncodingException {
 		String token = userService.loginUser(loginDto);
 		httpServletResponse.setHeader("Authorization", token);
-		Response response = new Response(HttpStatus.OK.value(), "User logged in successfully", null);
+		Response response = new Response(HttpStatus.OK.value(), "User logged in successfully", token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
