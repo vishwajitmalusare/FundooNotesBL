@@ -369,10 +369,9 @@ public class NoteServiceImpl implements NoteService {
 				.orElseThrow(() -> new UserException("note not found"));
 
 		List<Note> alreadyCollabNotes = user.getCollaboratedNotes().stream()
-				.filter(notes -> notes.getNoteId() == noteId)
-				.collect(Collectors.toList());
-		System.out.println("Note : "+note);
-		
+				.filter(notes -> notes.getNoteId() == noteId).collect(Collectors.toList());
+		System.out.println("Note : " + note);
+
 		if (alreadyCollabNotes != null) {
 			throw new UserException("note already collaborated");
 		} else {
@@ -410,6 +409,7 @@ public class NoteServiceImpl implements NoteService {
 		return "Note collaborated successfully...";
 
 	}
+
 	@Override
 	public String removeCollaboratorFromNote(String email, String collabEmailId, String noteId) {
 		String token = (String) redisTemplate.opsForHash().get(Key, email);
@@ -417,26 +417,25 @@ public class NoteServiceImpl implements NoteService {
 		
 		User owner = userRepository.findById(userId).orElseThrow(() -> new UserException("user not found"));
 		
-//		User user = userRepository.findById(noteId)
-//				.orElseThrow(() -> new UserException("user not collabotarted"));
-		
 		User user = userRepository.findAll().stream().filter(data -> data.getEmail().equals(collabEmailId)).findFirst()
 				.orElseThrow(() -> new UserException("collaborator user not exist"));
 		
-		System.out.println("Collab User: "+user.toString());
-
-		List<Note> notes = owner.getUserNotes();
-				System.out.println(notes);
-		
 		Note note = owner.getUserNotes().stream().filter(data -> data.getNoteId().equals(noteId)).findFirst()
 				.orElseThrow(() -> new NoteException("note not exists"));
-				
-		user.getCollaboratedNotes().remove(note);
+		
+		List<Note> alreadyCollabNotes = user.getCollaboratedNotes().stream()
+				.filter(notes -> notes.getNoteId() == noteId).collect(Collectors.toList());
+
+		if (alreadyCollabNotes != null) {
+			throw new UserException("Note Not Collaborated");
+		}
+		
 		List<Note> collabList = new ArrayList<Note>();
 		collabList.remove(note);
 		user.setCollaboratedNotes(collabList);
-		
-		note.getCollaboratedUsers().remove(user);
+		List<User> collabUser = new ArrayList<User>();
+		collabUser.remove(user);
+		note.setCollaboratedUsers(collabUser);
 
 		userRepository.save(user);
 		noteRepository.save(note);
