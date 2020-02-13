@@ -294,18 +294,7 @@ public class NoteServiceImpl implements NoteService {
 		}
 	}
 
-	// set note color
-//	@Override
-//	public String setColorToNote(String email, String noteId, String color) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//		Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
-//				.orElseThrow(() -> new NoteException("note not exist"));
-//		note.setColor(color);
-//		noteRepository.save(note);
-//		return "note color is succesfully set...";
-//	}
+	
 
 	// search note is part of elastic search so implement if you get free time
 //	@Override
@@ -442,17 +431,49 @@ public class NoteServiceImpl implements NoteService {
 
 		return "remove collaborator successfully";
 	}
-//
-//	@Override
-//	public List<Note> getAllCollaboratedNotes(String email) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//		List<Note> collaboratedNotes = user.getCollaboratedNotes();
-//		return collaboratedNotes;
-//	}
-//
-//	@Override
+
+	@Override
+	public List<Note> getAllCollaboratedNotes(String email) {
+		String token = (String) redisTemplate.opsForHash().get(Key, email);
+		String userId = tokenGenerator.verifyToken(token);
+		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
+		List<Note> collaboratedNotes = user.getCollaboratedNotes();
+		if(collaboratedNotes == null)
+			throw new NoteException("User not having any collaborated notes");
+		return collaboratedNotes;
+	}
+	
+	@Override
+	public List<User> getAllCollaboratedUsers(String email, String noteId) {
+		String token = (String) redisTemplate.opsForHash().get(Key, email);
+		String userId = tokenGenerator.verifyToken(token);
+		User user = userRepository.findById(userId)
+				.orElseThrow(()->new UserException("User not Exist"));
+		Note note = noteRepository.findById(noteId)
+				.orElseThrow(()-> new NoteException("note not Exists"));
+		List<User> collabUsers = note.getCollaboratedUsers();
+		System.out.println(collabUsers);
+		if(collabUsers.contains(user)) {
+		return collabUsers;
+		}
+		throw new UserException("Note not collabotrated to any user");
+	}
+
+	// set note color
+//		@Override
+//		public String setColorToNote(String email, String noteId, String color) {
+//			String token = (String) redisTemplate.opsForHash().get(Key, email);
+//			String userId = tokenGenerator.verifyToken(token);
+//			User user = userRepository.findByUserId(userId)
+//					.orElseThrow( ()-> new UserException("User not exist"));
+//			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
+//					.orElseThrow(()-> new NoteException("Note not exist"));
+//			note.setColor(color);
+//			noteRepository.save(note);
+//			return"note is colored with "+color+" color";
+//		}
+		
+		//	@Override
 //	public List<Note> getAllReminderNotes(String email) {
 //		String token = (String) redisTemplate.opsForHash().get(Key, email);
 //		String userId = tokenGenerator.verifyToken(token);
@@ -462,16 +483,6 @@ public class NoteServiceImpl implements NoteService {
 //		return reminderNotes;
 //	}
 //
-//	@Override
-//	public List<User> getAllCollaboratedOfUsers(String email, String noteId) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//		Note note = noteRepository.findById(userId).orElseThrow(() -> new NoteException("note note present"));
-//		System.out.println(note.toString());
-//		List<User> collaboratedUsers = note.getCollaboratedUsers();
-//		System.out.println("Collaborated users -> "+collaboratedUsers);
-//		return collaboratedUsers;
-//	}
+
 
 }

@@ -31,23 +31,23 @@ public interface NoteService {
 	List<Note> sortByName(String token);
 
 	List<Note> sortByDate(String token);
-		
+
+	String collaboratorNoteToUser(String email, String emailCollab, String noteId);
+
+	String removeCollaboratorFromNote(String email, String collabEmailId, String noteId);
+
+	List<Note> getAllCollaboratedNotes(String email);
+
 //	String setColorToNote(String email, String noteId, String color);
-//	
+
+	List<User> getAllCollaboratedUsers(String email, String noteId);
+
 //	Note findNoteFromUser(String email, String title, String description);
 //	
 //	String setReminderToNote(String email, String noteId, String time);
 //	
 //	String closeReminder(String email, String noteId);
 //	
-	String collaboratorNoteToUser(String email, String emailCollab, String noteId);
-	
-	String removeCollaboratorFromNote(String email, String collabEmailId, String noteId);
-//	
-//	List<Note> getAllCollaboratedNotes(String email);
-//	
 //	List<Note> getAllReminderNotes(String email);
-	
-//	List<User> getAllCollaboratedOfUsers(String email, String noteId);
 
 }

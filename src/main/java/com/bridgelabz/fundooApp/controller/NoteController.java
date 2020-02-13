@@ -127,20 +127,32 @@ public class NoteController {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	
-	@GetMapping("/removeCollaborator")
+	@PutMapping("/removeCollaborator")
 	public ResponseEntity<Response> removeCollaborator(@RequestHeader String email,@RequestParam String collabEmail,@RequestParam String noteId) {
 		String message = noteService.removeCollaboratorFromNote(email, collabEmail, noteId);
 		Response response =new Response(HttpStatus.OK.value(),message,null);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	
-//	@PutMapping("/setcolor")
+	@GetMapping("/getCollaboratedNote")
+	public List<Note> getCollaboratedNotes(@RequestHeader String email) {
+		 List<Note> collabNotes = noteService.getAllCollaboratedNotes(email);
+		 return collabNotes;
+	}
+	
+	@GetMapping("/getAllCollaboratedUsers")
+	public List<User> getCollaboratedUsers(@RequestHeader String email, @RequestParam String noteId) {
+		List<User> collboratedUsers = noteService.getAllCollaboratedUsers(email, noteId);
+		return collboratedUsers;
+	}
+
+	//	@PutMapping("/setcolor")
 //	public ResponseEntity<Response> setColorToNote(@RequestHeader String email, @RequestParam String noteId, @RequestParam String color) {
 //		String message = noteService.setColorToNote(email, noteId, color);
 //		Response response = new Response(HttpStatus.OK.value(),message,null);
 //		return new ResponseEntity<Response>(response,HttpStatus.OK);
 //	}
-//	
+	
 //	@GetMapping("/findNote")
 //	public Note getNote(@RequestHeader String email, @RequestHeader String title, @RequestHeader String description) {
 //		Note note = noteService.findNoteFromUser(email, title, description);
@@ -163,11 +175,7 @@ public class NoteController {
 //	}
 
 	
-//	@GetMapping("/getCollaboratedNote")
-//	public List<Note> getCollaboratedNotes(@RequestHeader String email) {
-//		 List<Note> collabNotes = noteService.getAllCollaboratedNotes(email);
-//		 return collabNotes;
-//	}
+
 	
 //	@GetMapping("/getAllRemindersNotes")
 //	public List<Note> getRemindersNotes(@RequestHeader String email){
@@ -175,9 +183,5 @@ public class NoteController {
 //		return reminderNotes;
 //	}
 	
-//	@GetMapping("/getAllCollaboratedUsers")
-//	public List<User> getCollaboratedUsers(@RequestHeader String email, @RequestParam String noteId) {
-//		List<User> collboratedUsers = noteService.getAllCollaboratedOfUsers(email, noteId);
-//		return collboratedUsers;
-//	}
+
 }
