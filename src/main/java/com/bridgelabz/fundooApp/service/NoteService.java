@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bridgelabz.fundooApp.dto.NoteDto;
 import com.bridgelabz.fundooApp.model.Note;
+import com.bridgelabz.fundooApp.model.User;
 
 public interface NoteService {
 
@@ -30,7 +31,23 @@ public interface NoteService {
 	List<Note> sortByName(String token);
 
 	List<Note> sortByDate(String token);
+		
+//	String setColorToNote(String email, String noteId, String color);
+//	
+//	Note findNoteFromUser(String email, String title, String description);
+//	
+//	String setReminderToNote(String email, String noteId, String time);
+//	
+//	String closeReminder(String email, String noteId);
+//	
+	String collaboratorNoteToUser(String email, String emailCollab, String noteId);
 	
-	String addCollaborator(String token, String noteId);
+	String removeCollaboratorFromNote(String email, String collabEmailId, String noteId);
+//	
+//	List<Note> getAllCollaboratedNotes(String email);
+//	
+//	List<Note> getAllReminderNotes(String email);
+	
+//	List<User> getAllCollaboratedOfUsers(String email, String noteId);
 
 }

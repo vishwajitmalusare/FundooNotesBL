@@ -38,7 +38,7 @@ public class UserController {
 	public ResponseEntity<Response> registerUser(@Valid @RequestBody UserDto userDto, HttpServletRequest request) {
 		StringBuffer requestUrl = request.getRequestURL();
 		String message = userService.registrationUser(userDto, requestUrl);
-		Response response = new Response(200, message, null);
+		Response response = new Response(HttpStatus.CREATED.value(), message, null);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
@@ -51,7 +51,7 @@ public class UserController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
-	@GetMapping("/forget")
+	@GetMapping("/forgetpassword")
 	public ResponseEntity<Response> forgotPassword(@RequestParam String emailId, HttpServletRequest request) {
 		StringBuffer requestUrl = request.getRequestURL();
 		// Response response = userService.forgetPassword(emailId, requestUrl);

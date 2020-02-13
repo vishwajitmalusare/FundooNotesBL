@@ -11,17 +11,26 @@ import com.bridgelabz.fundooApp.response.Response;
 public class NoteExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<Response> handleException(String message)
-	{
-		Response response=new Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
-		return new  ResponseEntity<Response>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<Response> handleException(String message) {
+		Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, null);
+		return new ResponseEntity<Response>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@ExceptionHandler(NoteException.class)
-	public ResponseEntity<Response> handleNoteException(RuntimeException runtimeException)
-	{
-		Response response=new Response(HttpStatus.BAD_REQUEST.value(), runtimeException.getMessage(), null);
-		return new ResponseEntity<Response>(response,HttpStatus.BAD_REQUEST);
-				
+	public ResponseEntity<Response> handleNoteException(RuntimeException runtimeException) {
+		Response response = new Response(HttpStatus.BAD_REQUEST.value(), runtimeException.getMessage(), null);
+		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+
+	}
+
+	@ExceptionHandler(UserException.class)
+	public ResponseEntity<Response> handleUserException(RuntimeException runtimeException) {
+		Response response = new Response(HttpStatus.BAD_REQUEST.value(), runtimeException.getMessage(), null);
+		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<Response> handleLabelException(RuntimeException runtimeException) {
+		Response response = new Response(HttpStatus.BAD_REQUEST.value(), runtimeException.getMessage(), null);
+		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 	}
 }

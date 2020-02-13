@@ -1,11 +1,16 @@
 package com.bridgelabz.fundooApp.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Document
 public class User {
@@ -24,6 +29,14 @@ public class User {
 	private LocalDateTime updateTime;
 	private String profilePicture;
 
+	@JsonIgnore
+	@DBRef()
+	private List<Note> userNotes;
+
+	@JsonIgnore
+	@DBRef(lazy = true)
+	private List<Note> collaboratedNotes;
+
 	public User() {
 
 	}
@@ -39,17 +52,11 @@ public class User {
 	 * @param creationTime
 	 * @param updateTime
 	 */
-	
-	/**
-	 * @return the address
-	 */
-	public String getAddress() {
-		return address;
-	}
 
-	public User(String userId, @Email(message = "Email should not be null") String email, String name, String password, String phoneNumber, String address, boolean isVerified,
-			LocalDateTime creationTime, LocalDateTime updateTime, String profilePicture) {
-		super();
+
+	public User(String userId, @Email(message = "Email should not be null") String email, String name, String password,
+			String phoneNumber, String address, boolean isVerified, LocalDateTime creationTime,
+			LocalDateTime updateTime, String profilePicture, List<Note> userNotes, List<Note> collaboratedNotes) {
 		this.userId = userId;
 		this.email = email;
 		this.name = name;
@@ -60,6 +67,15 @@ public class User {
 		this.creationTime = creationTime;
 		this.updateTime = updateTime;
 		this.profilePicture = profilePicture;
+		this.userNotes = userNotes;
+		this.collaboratedNotes = collaboratedNotes;
+	}
+
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
 	}
 
 	/**
@@ -97,7 +113,6 @@ public class User {
 		this.userId = userid;
 	}
 
-	
 	public String getName() {
 		return name;
 	}
@@ -113,7 +128,6 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 
 	public String getPassword() {
 		return password;
@@ -154,7 +168,6 @@ public class User {
 	public void setUpdateTime(LocalDateTime updateTime) {
 		this.updateTime = updateTime;
 	}
-	
 
 	public String getProfilePicture() {
 		return profilePicture;
@@ -164,13 +177,28 @@ public class User {
 		this.profilePicture = profilePicture;
 	}
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", email=" + email + ", name=" + name +", password=" + password + ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified="
-				+ isVerified + ", creationTime=" + creationTime + ", updateTime=" + updateTime + ", profilePicture="
-				+ profilePicture + "]";
+	public List<Note> getUserNotes() {
+		return userNotes;
 	}
 
+	public void setUserNotes(List<Note> userNotes) {
+		this.userNotes = userNotes;
+	}
 
+	public List<Note> getCollaboratedNotes() {
+		return collaboratedNotes;
+	}
+
+	public void setCollaboratedNotes(List<Note> collaboratedNotes) {
+		this.collaboratedNotes = collaboratedNotes;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", email=" + email + ", name=" + name + ", password=" + password
+				+ ", phoneNumber=" + phoneNumber + ", address=" + address + ", isVerified=" + isVerified
+				+ ", creationTime=" + creationTime + ", updateTime=" + updateTime + ", profilePicture=" + profilePicture
+				+ ", userNotes=" + userNotes + ", collaboratedNotes=" + collaboratedNotes + "]";
+	}
 
 }

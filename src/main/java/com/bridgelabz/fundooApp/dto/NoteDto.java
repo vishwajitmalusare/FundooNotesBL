@@ -14,7 +14,6 @@ public class NoteDto {
 	 * @param description
 	 */
 	public NoteDto(String title, String description) {
-		super();
 		this.title = title;
 		this.description = description;
 	}
