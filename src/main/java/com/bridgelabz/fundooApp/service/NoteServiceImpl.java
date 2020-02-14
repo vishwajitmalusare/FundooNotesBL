@@ -420,11 +420,11 @@ public class NoteServiceImpl implements NoteService {
 			String userId = tokenGenerator.verifyToken(token);
 			User user = userRepository.findByUserId(userId)
 					.orElseThrow( ()-> new UserException("User not exist"));
-			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
+			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId().equals(noteId)).findFirst()
 					.orElseThrow(()-> new NoteException("Note not exist"));
 			note.setColor(color);
 			noteRepository.save(note);
-			return"note is colored with "+color+" color";
+			return"note is colored with "+color+"color";
 		}
 		
 		
@@ -450,9 +450,7 @@ public class NoteServiceImpl implements NoteService {
 			
 			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId().equals(noteId)).findFirst()
 					.orElseThrow(() -> new NoteException("note dosent exist"));
-			
-			System.out.println(note.toString());
-	
+				
 			LocalDateTime localDateTime = LocalDateTime.now();
 			if (time.equalsIgnoreCase("tomorrow")) {
 				localDateTime = LocalDateTime.now().plusDays(1);
@@ -465,19 +463,19 @@ public class NoteServiceImpl implements NoteService {
 			noteRepository.save(note);
 			return "Reminder set successfully to note";
 		}
-		//
-//		@Override
-//		public String closeReminder(String email, String noteId) {
-//			String token = (String) redisTemplate.opsForHash().get(Key, email);
-//			String userId = tokenGenerator.verifyToken(token);
-//			User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
-//					.orElseThrow(() -> new NoteException("note not exist"));
-//			note.setReminder(null);
-//			noteRepository.save(note);
-//			return "reminder closed";
-//		}
 		
+		@Override
+		public String closeReminder(String email, String noteId) {
+			String token = (String) redisTemplate.opsForHash().get(Key, email);
+			String userId = tokenGenerator.verifyToken(token);
+			User user = userRepository.findById(userId)
+					.orElseThrow(()-> new UserException("user not exist"));
+			Note note = user.getUserNotes().parallelStream().filter(data->data.getNoteId().equals(noteId)).findFirst()
+					.orElseThrow(()-> new NoteException("Note not exist"));
+			note.setReminder(null);
+			noteRepository.save(note);
+			return "Remider closed";
+		}
 		//	@Override
 //	public List<Note> getAllReminderNotes(String email) {
 //		String token = (String) redisTemplate.opsForHash().get(Key, email);

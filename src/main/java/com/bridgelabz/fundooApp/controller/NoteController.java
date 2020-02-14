@@ -166,13 +166,13 @@ public class NoteController {
 		Response response = new Response(HttpStatus.OK.value(),message,null);
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
-//	
-//	@GetMapping("/removeReminder")
-//	public ResponseEntity<Response> deleteRemainderToNote(@RequestHeader String email, @RequestParam String noteId) {
-//		String message = noteService.closeReminder(email, noteId);
-//		Response res = new Response(HttpStatus.OK.value(),message,null);
-//		return new ResponseEntity<Response>(res,HttpStatus.OK);
-//	}
+	
+	@PutMapping("/removeReminder")
+	public ResponseEntity<Response> deleteRemainderToNote(@RequestHeader String email, @RequestParam String noteId) {
+		String message = noteService.closeReminder(email, noteId);
+		Response res = new Response(HttpStatus.OK.value(),message,null);
+		return new ResponseEntity<Response>(res,HttpStatus.OK);
+	}
 
 	
 
