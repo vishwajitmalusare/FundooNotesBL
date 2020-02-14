@@ -177,11 +177,11 @@ public class NoteController {
 	
 
 	
-//	@GetMapping("/getAllRemindersNotes")
-//	public List<Note> getRemindersNotes(@RequestHeader String email){
-//		List<Note> reminderNotes = noteService.getAllReminderNotes(email);
-//		return reminderNotes;
-//	}
+	@GetMapping("/getAllRemindersNotes")
+	public List<Note> getRemindersNotes(@RequestHeader String email,@RequestParam String noteId){
+		List<Note> reminderNotes = noteService.getAllReminderNotes(email,noteId);
+		return reminderNotes;
+	}
 	
 
 }

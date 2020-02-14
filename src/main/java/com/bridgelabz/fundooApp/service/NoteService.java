@@ -47,7 +47,7 @@ public interface NoteService {
 	String setReminderToNote(String email, String noteId, String time);
 	
 	String closeReminder(String email, String noteId);
-//	
-//	List<Note> getAllReminderNotes(String email);
+
+	List<Note> getAllReminderNotes(String email, String noteId);
 
 }
