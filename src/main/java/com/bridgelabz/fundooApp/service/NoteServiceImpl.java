@@ -297,20 +297,6 @@ public class NoteServiceImpl implements NoteService {
 	
 
 
-	
-//
-//	@Override
-//	public String closeReminder(String email, String noteId) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//		Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
-//				.orElseThrow(() -> new NoteException("note not exist"));
-//		note.setReminder(null);
-//		noteRepository.save(note);
-//		return "reminder closed";
-//	}
-
 	@Override
 	public String collaboratorNoteToUser(String email, String emailCollab, String noteId) {
 		String token = (String) redisTemplate.opsForHash().get(Key, email);
@@ -479,6 +465,18 @@ public class NoteServiceImpl implements NoteService {
 			noteRepository.save(note);
 			return "Reminder set successfully to note";
 		}
+		//
+//		@Override
+//		public String closeReminder(String email, String noteId) {
+//			String token = (String) redisTemplate.opsForHash().get(Key, email);
+//			String userId = tokenGenerator.verifyToken(token);
+//			User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
+//			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
+//					.orElseThrow(() -> new NoteException("note not exist"));
+//			note.setReminder(null);
+//			noteRepository.save(note);
+//			return "reminder closed";
+//		}
 		
 		//	@Override
 //	public List<Note> getAllReminderNotes(String email) {
