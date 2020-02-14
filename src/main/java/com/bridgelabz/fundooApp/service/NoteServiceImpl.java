@@ -296,40 +296,8 @@ public class NoteServiceImpl implements NoteService {
 
 	
 
-	// search note is part of elastic search so implement if you get free time
-//	@Override
-//	public Note findNoteFromUser(String email, String title, String description) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//
-//		Note note = user.getUserNotes().stream()
-//				.filter(data -> data.getDescription().equals(description) && data.getTitle().equals(title)).findFirst()
-//				.orElseThrow(() -> new NoteException("note not exist"));
-//		return note;
-//	}
 
-	// set remainder to note
-//	@Override
-//	public String setReminderToNote(String email, String noteId, String time) {
-//		String token = (String) redisTemplate.opsForHash().get(Key, email);
-//		String userId = tokenGenerator.verifyToken(token);
-//
-//		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
-//		Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
-//				.orElseThrow(() -> new NoteException("note dosent exist"));
-//
-//		LocalDateTime localDateTime = LocalDateTime.now();
-//		if (time.equalsIgnoreCase("tomorrow")) {
-//			localDateTime = LocalDateTime.now().plusDays(1);
-//		}
-//		if (time.equalsIgnoreCase("weekly")) {
-//			localDateTime = LocalDateTime.now().plusDays(7);
-//		}
-//		note.setReminder(localDateTime);
-//		noteRepository.save(note);
-//		return "Rminder set successfully to note";
-//	}
+	
 //
 //	@Override
 //	public String closeReminder(String email, String noteId) {
@@ -460,18 +428,57 @@ public class NoteServiceImpl implements NoteService {
 	}
 
 	// set note color
-//		@Override
-//		public String setColorToNote(String email, String noteId, String color) {
-//			String token = (String) redisTemplate.opsForHash().get(Key, email);
-//			String userId = tokenGenerator.verifyToken(token);
-//			User user = userRepository.findByUserId(userId)
-//					.orElseThrow( ()-> new UserException("User not exist"));
-//			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
-//					.orElseThrow(()-> new NoteException("Note not exist"));
-//			note.setColor(color);
-//			noteRepository.save(note);
-//			return"note is colored with "+color+" color";
-//		}
+		@Override
+		public String setColorToNote(String email, String noteId, String color) {
+			String token = (String) redisTemplate.opsForHash().get(Key, email);
+			String userId = tokenGenerator.verifyToken(token);
+			User user = userRepository.findByUserId(userId)
+					.orElseThrow( ()-> new UserException("User not exist"));
+			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId() == noteId).findFirst()
+					.orElseThrow(()-> new NoteException("Note not exist"));
+			note.setColor(color);
+			noteRepository.save(note);
+			return"note is colored with "+color+" color";
+		}
+		
+		
+		@Override
+		public Note findNoteFromUser(String email, String title, String description) {
+			String token = (String) redisTemplate.opsForHash().get(Key, email);
+			String userId = tokenGenerator.verifyToken(token);
+			User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
+	
+			Note note = user.getUserNotes().stream()
+					.filter(data -> data.getDescription().equals(description) && data.getTitle().equals(title)).findFirst()
+					.orElseThrow(() -> new NoteException("note not exist"));
+			return note;
+		}
+
+		// set remainder to note
+		@Override
+		public String setReminderToNote(String email, String noteId, String time) {
+			String token = (String) redisTemplate.opsForHash().get(Key, email);
+			String userId = tokenGenerator.verifyToken(token);
+	
+			User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
+			
+			Note note = user.getUserNotes().stream().filter(data -> data.getNoteId().equals(noteId)).findFirst()
+					.orElseThrow(() -> new NoteException("note dosent exist"));
+			
+			System.out.println(note.toString());
+	
+			LocalDateTime localDateTime = LocalDateTime.now();
+			if (time.equalsIgnoreCase("tomorrow")) {
+				localDateTime = LocalDateTime.now().plusDays(1);
+			}
+			if (time.equalsIgnoreCase("weekly")) {
+				localDateTime = LocalDateTime.now().plusDays(7);
+			}
+			//May be its a time when reminder is set
+			note.setReminder(localDateTime);
+			noteRepository.save(note);
+			return "Reminder set successfully to note";
+		}
 		
 		//	@Override
 //	public List<Note> getAllReminderNotes(String email) {
@@ -484,5 +491,5 @@ public class NoteServiceImpl implements NoteService {
 //	}
 //
 
-
+		// search note is part of elastic search so implement if you get free time
 }

@@ -37,16 +37,16 @@ public interface NoteService {
 	String removeCollaboratorFromNote(String email, String collabEmailId, String noteId);
 
 	List<Note> getAllCollaboratedNotes(String email);
-
-//	String setColorToNote(String email, String noteId, String color);
-
+	
 	List<User> getAllCollaboratedUsers(String email, String noteId);
 
-//	Note findNoteFromUser(String email, String title, String description);
-//	
-//	String setReminderToNote(String email, String noteId, String time);
-//	
-//	String closeReminder(String email, String noteId);
+	String setColorToNote(String email, String noteId, String color);
+
+	Note findNoteFromUser(String email, String title, String description);
+	
+	String setReminderToNote(String email, String noteId, String time);
+	
+	String closeReminder(String email, String noteId);
 //	
 //	List<Note> getAllReminderNotes(String email);
 

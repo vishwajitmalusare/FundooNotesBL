@@ -146,33 +146,33 @@ public class NoteController {
 		return collboratedUsers;
 	}
 
-	//	@PutMapping("/setcolor")
-//	public ResponseEntity<Response> setColorToNote(@RequestHeader String email, @RequestParam String noteId, @RequestParam String color) {
-//		String message = noteService.setColorToNote(email, noteId, color);
-//		Response response = new Response(HttpStatus.OK.value(),message,null);
-//		return new ResponseEntity<Response>(response,HttpStatus.OK);
-//	}
+		@PutMapping("/setcolor")
+	public ResponseEntity<Response> setColorToNote(@RequestHeader String email, @RequestParam String noteId, @RequestParam String color) {
+		String message = noteService.setColorToNote(email, noteId, color);
+		Response response = new Response(HttpStatus.OK.value(),message,null);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
 	
-//	@GetMapping("/findNote")
-//	public Note getNote(@RequestHeader String email, @RequestHeader String title, @RequestHeader String description) {
-//		Note note = noteService.findNoteFromUser(email, title, description);
-//		return note;
-//	} 
-//	
+	@GetMapping("/findNote")
+	public Note getNote(@RequestHeader String email, @RequestHeader String title, @RequestHeader String description) {
+		Note note = noteService.findNoteFromUser(email, title, description);
+		return note;
+	} 
+	
 	//Its sohuld be put call or post
-//	@GetMapping("/setRemainder")
-//	public ResponseEntity<Response> setRemainderToNote(@RequestHeader String email,@RequestParam String noteId,@RequestParam String time) {
-//		String message = noteService.setReminderToNote(email, noteId, time);
-//		Response response = new Response(HttpStatus.OK.value(),message,null);
-//		return new ResponseEntity<Response>(response,HttpStatus.OK);
-//	}
-//	
-//	@GetMapping("/removeReminder")
-//	public ResponseEntity<Response> deleteRemainderToNote(@RequestHeader String email, @RequestParam String noteId) {
-//		String message = noteService.closeReminder(email, noteId);
-//		Response res = new Response(HttpStatus.OK.value(),message,null);
-//		return new ResponseEntity<Response>(res,HttpStatus.OK);
-//	}
+	@PutMapping("/setRemainder")
+	public ResponseEntity<Response> setRemainderToNote(@RequestHeader String email,@RequestParam String noteId,@RequestParam String time) {
+		String message = noteService.setReminderToNote(email, noteId, time);
+		Response response = new Response(HttpStatus.OK.value(),message,null);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	}
+	
+	@GetMapping("/removeReminder")
+	public ResponseEntity<Response> deleteRemainderToNote(@RequestHeader String email, @RequestParam String noteId) {
+		String message = noteService.closeReminder(email, noteId);
+		Response res = new Response(HttpStatus.OK.value(),message,null);
+		return new ResponseEntity<Response>(res,HttpStatus.OK);
+	}
 
 	
 
