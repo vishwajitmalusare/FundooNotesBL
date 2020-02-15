@@ -3,7 +3,6 @@ package com.bridgelabz.fundooApp.service;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,18 +56,19 @@ public class NoteServiceImpl implements NoteService {
 		Optional<User> optUser = userRepository.findByUserId(userId);
 		if (optUser.isPresent()) {
 			System.out.println("user opt-->" + optUser.get());
+			if (noteDto.getTitle().isEmpty() || noteDto.getDescription().isEmpty()) {
+				throw new NoteException("empty Title Or Description");
+			}
 			Note note = modelMapper.map(noteDto, Note.class);
 			note.setCreationtTime(LocalDateTime.now());
 			note.setUpdateTime(LocalDateTime.now());
 			note.setUserId(userId);
 			note = noteRepository.save(note);
-//			userRepository.save(optUser.get());
-			List<Note> demo = new ArrayList<Note>();
-			demo.add(note);
-			optUser.get().setUserNotes(demo);
-			System.out.println("user opt-->" + optUser.get());
+			List<Note> userList = new ArrayList<Note>();
+			userList.addAll(optUser.get().getUserNotes());
+			userList.add(note);
+			optUser.get().setUserNotes(userList);
 			userRepository.save(optUser.get());
-			// return new Response(200, "note created ", null);
 			return "note created";
 
 		} else {
@@ -142,12 +142,6 @@ public class NoteServiceImpl implements NoteService {
 	public List<Note> getAllNote(String token) {
 
 		String userId = tokenGenerator.verifyToken(token);
-//		List<Note> notes = noteRepository.findAll();
-//		List<Note> filteredNotes = notes.stream().filter(note -> {
-//			return note.getUserId().equals(userId);
-//		}).collect(Collectors.toList());
-//
-//		return filteredNotes;
 
 		// This gives us a single record
 		return userRepository.findById(userId).get().getUserNotes();
@@ -476,7 +470,7 @@ public class NoteServiceImpl implements NoteService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new UserException("user not exist"));
 		List<Note> remiderNotes = user.getUserNotes().stream().filter(data -> data.getReminder() != null)
 				.collect(Collectors.toList());
-		if(remiderNotes== null)
+		if (remiderNotes == null)
 			throw new NoteException("There is no any notes with reminder");
 		return remiderNotes;
 	}
