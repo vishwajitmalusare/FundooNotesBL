@@ -22,9 +22,6 @@ import com.bridgelabz.fundooApp.model.Note;
 import com.bridgelabz.fundooApp.model.User;
 import com.bridgelabz.fundooApp.response.Response;
 import com.bridgelabz.fundooApp.service.NoteService;
-import com.bridgelabz.fundooApp.service.UserService;
-import com.bridgelabz.fundooApp.utility.ITokenGenerator;
-import com.bridgelabz.fundooApp.utility.JWTTokenGenerator;
 
 @CrossOrigin(origins = "*",allowedHeaders = {"*"}, exposedHeaders = {"email"})
 @RestController
@@ -34,8 +31,6 @@ public class NoteController {
 	@Autowired
 	private NoteService noteService;
 	
-	@Autowired
-	private JWTTokenGenerator tokenGenerator;
 
 	@PostMapping("/createnote")
 	public ResponseEntity<Response> createNote(@RequestBody NoteDto noteDto, @RequestHeader String token)
@@ -48,14 +43,14 @@ public class NoteController {
 
 	@PutMapping("/updatenote")
 	public ResponseEntity<Response> updateNote(@RequestBody NoteDto noteDto, @RequestParam String noteId,
-			@RequestParam String token) {
+			@RequestHeader String token) {
 		String message = noteService.updateNote(noteDto, noteId, token);
 		Response response = new Response(HttpStatus.ACCEPTED.value(), message, null);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/deletenote")
-	public ResponseEntity<Response> deleteNote(@RequestParam String noteId, @RequestParam String token) {
+	public ResponseEntity<Response> deleteNote(@RequestParam String noteId, @RequestHeader String token) {
 
 		String message = noteService.deleteNote(noteId, token);
 		Response response = new Response(HttpStatus.OK.value(), message, null);
@@ -81,7 +76,7 @@ public class NoteController {
 	}
 
 	@GetMapping("/getarchive")
-	public List<Note> getArchive(@RequestParam String token) {
+	public List<Note> getArchive(@RequestHeader String token) {
 		List<Note> noteslist = noteService.getArchive(token);
 		return noteslist;
 	}
