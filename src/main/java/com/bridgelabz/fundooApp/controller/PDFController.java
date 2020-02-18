@@ -3,7 +3,9 @@ package com.bridgelabz.fundooApp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgelabz.fundooApp.response.Response;
 import com.bridgelabz.fundooApp.service.PDFService;
 
+@CrossOrigin(allowedHeaders = "*", origins = "*")
 @RestController()
 @RequestMapping("/pdf")
 public class PDFController {
@@ -26,7 +29,7 @@ public class PDFController {
 	}
 	
 	@PostMapping("/notetopdf")
-	public ResponseEntity<Response> extractNoteToPDF(@RequestParam String token, @RequestParam String fileName) {
+	public ResponseEntity<Response> extractNoteToPDF(@RequestHeader String token, @RequestParam String fileName) {
 		String message = pdfService.extractNoteToPDF(token, fileName);
 		Response response = new Response(HttpStatus.OK.value(), message, null);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
