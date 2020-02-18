@@ -109,6 +109,7 @@ public class PDFServiceImpl implements PDFService {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			String currentDate = dateFormat.format(date);
+
 			document.save(CREATED_PDF + fileName + "_" + currentDate + ".pdf");
 			document.close();
 		} catch (Exception e) {

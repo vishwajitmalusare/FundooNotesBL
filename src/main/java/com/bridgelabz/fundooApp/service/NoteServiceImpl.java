@@ -56,7 +56,7 @@ public class NoteServiceImpl implements NoteService {
 		Optional<User> optUser = userRepository.findByUserId(userId);
 		if (optUser.isPresent()) {
 			System.out.println("user opt-->" + optUser.get());
-			if (noteDto.getTitle().isEmpty() || noteDto.getDescription().isEmpty()) {
+			if ((noteDto.getTitle().isEmpty() || noteDto.getDescription().isEmpty()) || (noteDto.getTitle().isEmpty() && noteDto.getDescription().isEmpty())) {
 				throw new NoteException("empty Title Or Description");
 			}
 			Note note = modelMapper.map(noteDto, Note.class);

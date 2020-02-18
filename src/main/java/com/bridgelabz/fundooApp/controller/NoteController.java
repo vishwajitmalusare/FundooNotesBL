@@ -37,8 +37,12 @@ public class NoteController {
 
 	{
 		String message = noteService.createNote(noteDto, token);
-		Response response = new Response(HttpStatus.CREATED.value(), message, null);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
+		if(message=="note not created") {
+			Response notCreated = new Response(HttpStatus.CONTINUE.value(), message, null);
+			return new ResponseEntity<Response>(notCreated,HttpStatus.CONTINUE);
+		}
+		Response created = new Response(HttpStatus.CREATED.value(), message, null);
+		return new ResponseEntity<Response>(created, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/updatenote")
@@ -46,7 +50,7 @@ public class NoteController {
 			@RequestHeader String token) {
 		String message = noteService.updateNote(noteDto, noteId, token);
 		Response response = new Response(HttpStatus.ACCEPTED.value(), message, null);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
+		return new ResponseEntity<Response>(response, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/deletenote")
